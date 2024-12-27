@@ -1,15 +1,12 @@
-package ru.practicum.shareit.user;
+package ru.practicum.shareit.user.dto;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
 @Builder(toBuilder = true)
-@EqualsAndHashCode(of = "email")
-public class User {
+public class UserDto {
     private long id;
     private String name;
-    private String login;
     private String email;
 }
