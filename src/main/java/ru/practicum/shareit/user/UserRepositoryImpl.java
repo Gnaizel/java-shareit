@@ -3,14 +3,16 @@ package ru.practicum.shareit.user;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
+import ru.practicum.shareit.user.exception.ParamValidationError;
 
-import java.time.Instant;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository {
     private final Collection<User> users = new HashSet<>();
+    private final AtomicLong idGenerator = new AtomicLong(0);
 
     @Override
     public Collection<User> getAll() {
@@ -22,9 +24,9 @@ public class UserRepositoryImpl implements UserRepository {
         if (!users.stream()
                 .filter(user1 -> user1.getEmail().equals(user.getEmail()))
                 .toList().isEmpty()) {
-            throw new RuntimeException("email уже зарегестрирован");
+            throw new ParamValidationError("email уже зарегестрирован");
         }
-        user.setId(Instant.now().toEpochMilli());
+        user.setId(idGenerator.incrementAndGet());
         users.add(user);
         return user;
     }
@@ -35,7 +37,7 @@ public class UserRepositoryImpl implements UserRepository {
                 .filter(user1 -> user1.getEmail() != null && user1.getEmail().equals(user.getEmail()))
                 .filter(user1 -> user1.getId() != user.getId())
                 .toList().isEmpty()) {
-            throw new RuntimeException("email уже зарегистрирован");
+            throw new ParamValidationError("email уже зарегестрирован");
         }
         delete(user.getId());
         users.add(user);

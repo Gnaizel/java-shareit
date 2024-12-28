@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
+import ru.practicum.shareit.item.dto.ItemUpdateDto;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.Collection;
@@ -28,9 +29,6 @@ public class ItemService {
     }
 
     public ItemDto save(long userId, ItemDto itemDto) {
-        if (itemDto.getAvailable() == null) throw new RuntimeException("Авалэбал дай");
-        if (itemDto.getName().isEmpty()) throw new RuntimeException("Не корректный name");
-        if (itemDto.getDescription().isEmpty()) throw new RuntimeException("Не корректный description");
 
         Item item = ItemMapper.fromDto(itemDto).toBuilder().ownerId(userId).build();
         return ItemMapper.toDto(itemRepository.save(item));
@@ -38,7 +36,7 @@ public class ItemService {
 
     public ItemDto update(long userId,
                           long id,
-                          ItemDto itemDto) {
+                          ItemUpdateDto itemUpdateDto) {
 
         Item existingItem = itemRepository.getById(id);
 
@@ -46,7 +44,7 @@ public class ItemService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only owner can update item");
         }
 
-        Item updatedItem = ItemMapper.fromDto(itemDto).toBuilder()
+        Item updatedItem = ItemMapper.fromUpdateDto(itemUpdateDto).toBuilder()
                 .id(existingItem.getId())
                 .ownerId(existingItem.getOwnerId())
                 .beenOnLoan(existingItem.getBeenOnLoan())

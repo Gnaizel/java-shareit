@@ -15,6 +15,15 @@ public class ItemMapper {
                 .build();
     }
 
+    public static Item fromUpdateDto(ItemUpdateDto itemDto) {
+        return Item.builder()
+                .beenOnLoan(itemDto.getBeenOnLoan())
+                .name(itemDto.getName())
+                .description(itemDto.getDescription())
+                .available(itemDto.getAvailable())
+                .build();
+    }
+
     public static Item fromDto(ItemDto itemDto) {
         return Item.builder()
                 .beenOnLoan(itemDto.getBeenOnLoan())
