@@ -5,16 +5,17 @@ import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.UserRepository;
 
-import java.time.Instant;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
 public class ItemRepositoryImpl implements ItemRepository {
     private final UserRepository userRepository;
+    private final AtomicLong idGenerator = new AtomicLong(0);
 
     private final Collection<Item> items = new HashSet<>();
 
@@ -34,7 +35,7 @@ public class ItemRepositoryImpl implements ItemRepository {
     @Override
     public Item save(Item item) {
         userRepository.getById(item.getOwnerId());
-        item.setId(Instant.now().toEpochMilli());
+        item.setId(idGenerator.incrementAndGet());
         items.add(item);
         return getById(item.getId());
     }

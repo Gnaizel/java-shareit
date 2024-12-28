@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
+import ru.practicum.shareit.user.dto.UserUpdateDto;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -33,9 +34,9 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public UserDto update(@PathVariable("id") long id, @Valid @RequestBody User user) {
-        user.setId(id);
-        return UserMapper.toDto(userService.update(user));
+    public UserDto update(@PathVariable("id") long id, @Valid @RequestBody UserUpdateDto userUpdateDto) {
+        userUpdateDto.setId(id);
+        return UserMapper.toDto(userService.update(userUpdateDto));
     }
 
     @DeleteMapping("/{id}")

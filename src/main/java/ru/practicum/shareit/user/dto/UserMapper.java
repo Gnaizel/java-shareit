@@ -12,9 +12,19 @@ public class UserMapper {
                 .build();
     }
 
-    public static User fromDto(UserDto userDto) {
+    public static UserDto toDtoFromUpdateDto(UserUpdateDto userUpdateDto) {
+        return UserDto.builder()
+                .id(userUpdateDto.getId())
+                .name(userUpdateDto.getName())
+                .email(userUpdateDto.getEmail())
+                .build();
+    }
+
+    public static User fromUpdateDto(UserUpdateDto userDto) {
         return User.builder()
+                .id(userDto.getId())
                 .name(userDto.getName())
+                .email(userDto.getEmail())
                 .build();
     }
 }
