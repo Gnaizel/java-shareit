@@ -3,6 +3,7 @@ package ru.practicum.shareit.user;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
+import ru.practicum.shareit.user.exception.OnValidEmail;
 import ru.practicum.shareit.user.exception.ParamValidationError;
 
 import java.util.Collection;
@@ -24,7 +25,7 @@ public class UserRepositoryImpl implements UserRepository {
         if (!users.stream()
                 .filter(user1 -> user1.getEmail().equals(user.getEmail()))
                 .toList().isEmpty()) {
-            throw new ParamValidationError("email уже зарегестрирован");
+            throw new OnValidEmail("email уже зарегестрирован");
         }
         user.setId(idGenerator.incrementAndGet());
         users.add(user);
@@ -37,7 +38,7 @@ public class UserRepositoryImpl implements UserRepository {
                 .filter(user1 -> user1.getEmail() != null && user1.getEmail().equals(user.getEmail()))
                 .filter(user1 -> user1.getId() != user.getId())
                 .toList().isEmpty()) {
-            throw new ParamValidationError("email уже зарегестрирован");
+            throw new OnValidEmail("email уже зарегестрирован");
         }
         delete(user.getId());
         users.add(user);
