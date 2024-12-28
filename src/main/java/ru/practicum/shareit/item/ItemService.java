@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
+import ru.practicum.shareit.item.exception.PermissionError;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.exception.ParamValidationError;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -40,7 +40,7 @@ public class ItemService {
         Item existingItem = itemRepository.getById(id);
 
         if (existingItem.getOwnerId() != userId) {
-            throw new ParamValidationError("Only owner can update item");
+            throw new PermissionError("Only owner can update item");
         }
 
         Item updatedItem = ItemMapper.fromUpdateDto(itemUpdateDto).toBuilder()
