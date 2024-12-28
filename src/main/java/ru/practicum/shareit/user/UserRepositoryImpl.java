@@ -4,7 +4,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.shareit.user.exception.OnValidEmail;
-import ru.practicum.shareit.user.exception.ParamValidationError;
 
 import java.util.Collection;
 import java.util.HashSet;

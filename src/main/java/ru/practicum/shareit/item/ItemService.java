@@ -1,13 +1,12 @@
 package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.exception.ParamValidationError;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -41,7 +40,7 @@ public class ItemService {
         Item existingItem = itemRepository.getById(id);
 
         if (existingItem.getOwnerId() != userId) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only owner can update item");
+            throw new ParamValidationError("Only owner can update item");
         }
 
         Item updatedItem = ItemMapper.fromUpdateDto(itemUpdateDto).toBuilder()
