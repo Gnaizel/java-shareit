@@ -24,6 +24,11 @@ public class ItemController {
         return itemService.getById(id);
     }
 
+    @PostMapping("/{itemId}/comment")
+    public Comment addComment(@PathVariable("id") long id) {
+
+    }
+
     @PostMapping
     public ItemDto save(@RequestHeader("X-Sharer-User-Id") long userId, @Valid @RequestBody ItemDto itemDto) {
         return itemService.save(userId, itemDto);
