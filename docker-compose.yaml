@@ -1,0 +1,12 @@
+service:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD:test
+      POSTGRES_USER:test
+      POSTGRES_DB:shareit
+adminer:
+  image: adminer
+  restart: always
+  ports: 8080:8080
