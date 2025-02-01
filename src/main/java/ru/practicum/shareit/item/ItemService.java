@@ -43,21 +43,30 @@ public class ItemService {
     public ItemDto update(long userId,
                           long id,
                           ItemUpdateDto itemUpdateDto) {
-
-        Item existingItem = itemRepository.findById(id).get();
+        Item existingItem = itemRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Item not found")); // Обработка, если item не найден
 
         if (existingItem.getOwnerId() != userId) {
             throw new PermissionError("Only owner can update item");
         }
 
-        Item updatedItem = ItemMapper.fromUpdateDto(itemUpdateDto).toBuilder()
-                .id(existingItem.getId())
-                .ownerId(existingItem.getOwnerId())
-                .beenOnLoan(existingItem.getBeenOnLoan())
-                .build();
+        Item.ItemBuilder itemBuilder = existingItem.toBuilder();
 
-        return ItemMapper.toBookingInfoDto(itemRepository.save(updatedItem));
+        if (itemUpdateDto.getName() != null && !itemUpdateDto.getName().isBlank()) {
+            itemBuilder.name(itemUpdateDto.getName());
+        }
+        if (itemUpdateDto.getDescription() != null && !itemUpdateDto.getDescription().isBlank()) {
+            itemBuilder.description(itemUpdateDto.getDescription());
+        }
+        if (itemUpdateDto.getAvailable() != null) {
+            itemBuilder.available(itemUpdateDto.getAvailable());
+        }
+
+        Item updatedItem = itemRepository.save(itemBuilder.build());
+
+        return ItemMapper.toBookingInfoDto(updatedItem);
     }
+
 
 
     public void delete(long id) {

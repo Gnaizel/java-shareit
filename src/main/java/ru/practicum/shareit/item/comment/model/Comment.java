@@ -27,5 +27,6 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "item_id")
     private Item item;
+    @Column(name = "create_date_time")
     private LocalDateTime createDataTime;
 }
