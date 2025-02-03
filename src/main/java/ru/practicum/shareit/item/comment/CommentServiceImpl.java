@@ -84,8 +84,6 @@ public class CommentServiceImpl implements CommentService {
         itemDto.setNextBooking(bookingRepository.findTopByItemIdAndStatusOrderByIdAsc(itemId, BookStatus.APPROVED)
                 .map(BookingMapper::toBookingInfoDto)
                 .orElse(null));
-        itemDto.setNextBooking(null);
-        itemDto.setLastBooking(null);
 
         return itemDto;
     }

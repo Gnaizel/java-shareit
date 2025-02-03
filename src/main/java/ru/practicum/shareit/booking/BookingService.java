@@ -40,13 +40,22 @@ public class BookingService {
         if (!item.getAvailable()) {
             throw new ItemIsAlreadyOnLease("Item in lease");
         }
-        if (bookingDto.getEnd().isBefore(LocalDateTime.now()) || bookingDto.getStart().isBefore(LocalDateTime.now())) {
+        if (item.getOwnerId() == userId) {
+            throw new RuntimeException("Owner can't rent his item");
+        }
+        if (bookingDto.getEnd().isBefore(LocalDateTime.now())) {
             throw new InvalidFiledBooking("incorrect end or start time");
+        }
+        if (bookingDto.getStart().isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("Start time cannot be in the past");
+        }
+        if (bookingDto.getEnd().isBefore(bookingDto.getStart())) {
+            throw new RuntimeException("End time cannot be earlier than start time");
         }
         if (bookingDto.getEnd().equals(bookingDto.getStart())) {
             throw new InvalidFiledBooking("End time can't start time :(");
         }
-        item.setAvailable(false);
+        item.setAvailable(true);
         Booking booking = BookingMapper.toBooking(bookingDto, booker, item);
         booking = bookingRepository.save(booking);
         return BookingMapper.toBookingInfoDto(booking);
@@ -63,7 +72,10 @@ public class BookingService {
         if (booking.getItem().getOwnerId() != userId) {
             throw new RuntimeException("In valid permission");
         }
-        booking.setStatus(approve ? BookStatus.APPROVED : BookStatus.REFUSED);
+        booking.setStatus(approve ? BookStatus.APPROVED : BookStatus.REJECTED);
+        if (booking.getStatus().equals(BookStatus.APPROVED)) {
+            booking.getItem().setAvailable(false);
+        }
         return BookingMapper.toBookingInfoDto(bookingRepository.save(booking));
     }
 
@@ -108,7 +120,7 @@ public class BookingService {
                         .collect(Collectors.toList());
             case REJECTED:
                 return bookingRepository.findAllByItemOwnerIdOrderByStartDesc(userId).stream()
-                        .filter(booking -> booking.getStatus().equals(BookStatus.REFUSED))
+                        .filter(booking -> booking.getStatus().equals(BookStatus.REJECTED))
                         .map(BookingMapper::toBookingInfoDto)
                         .collect(Collectors.toList());
             default:
@@ -143,7 +155,7 @@ public class BookingService {
                         .collect(Collectors.toList());
             case REJECTED:
                 return bookingRepository.findAllByBookerId(userId).stream()
-                        .filter(booking -> booking.getStatus().equals(BookStatus.REFUSED))
+                        .filter(booking -> booking.getStatus().equals(BookStatus.REJECTED))
                         .map(BookingMapper::toBookingInfoDto)
                         .collect(Collectors.toList());
             default:
