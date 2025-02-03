@@ -68,7 +68,6 @@ public class ItemService {
     }
 
 
-
     public void delete(long id) {
         itemRepository.deleteById(id);
     }
