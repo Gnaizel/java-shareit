@@ -66,6 +66,7 @@ public class RequestServiceImpl implements RequestService {
 
         for (ItemRequestDto itemRequestDto : itemRequestDtos) {
             List<Item> requestItems = items.stream()
+                    .filter(item -> item.getRequest() != null)
                     .filter(item -> item.getRequest().getId() == itemRequestDto.getId())
                     .toList();
             if (!requestItems.isEmpty()) {

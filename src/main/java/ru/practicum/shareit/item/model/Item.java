@@ -24,7 +24,7 @@ public class Item {
     private String description;
     private Boolean available;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "request_id")
     private ItemRequest request;
 }

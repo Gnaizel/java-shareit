@@ -1,7 +1,10 @@
 package ru.practicum.shareit.item.dto;
 
+import lombok.AllArgsConstructor;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.model.ItemRequest;
 
+@AllArgsConstructor
 public class ItemMapper {
 
     public static ItemDto toBookingInfoDto(Item item) {
@@ -30,6 +33,10 @@ public class ItemMapper {
                 .name(itemDto.getName())
                 .description(itemDto.getDescription())
                 .available(itemDto.getAvailable())
+                .request(itemDto.getRequestId() == null ?
+                        null : ItemRequest.builder()
+                        .id(itemDto.getRequestId())
+                        .build())
                 .build();
     }
 }

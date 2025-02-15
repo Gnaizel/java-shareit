@@ -24,12 +24,12 @@ public class ItemRequestController {
 
     @GetMapping
     public List<ItemRequestDto> getRequests(@RequestHeader("X-Sharer-User-Id") long userId) {
-        return requestService.getAllItemRequests(userId);
+        return requestService.getAllRequestsForUser(userId);
     }
 
     @GetMapping("/all")
     public List<ItemRequestDto> getAllRequests(@RequestHeader("X-Sharer-User-Id") long userId) {
-        return requestService.getAllRequestsForUser(userId);
+        return requestService.getAllItemRequests(userId);
     }
 
     @GetMapping("/{id}")

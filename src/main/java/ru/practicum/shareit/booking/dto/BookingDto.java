@@ -13,11 +13,11 @@ import java.time.LocalDateTime;
 @Builder(toBuilder = true)
 public class BookingDto {
     @NotNull
-    @FutureOrPresent
+    @FutureOrPresent(message = "Дата начала должна быть в будущем или настоящем")
     private LocalDateTime start;
 
     @NotNull
-    @Future
+    @Future(message = "Дата окончания должна быть в будущем")
     private LocalDateTime end;
 
     @NotNull
