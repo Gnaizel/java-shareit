@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.practicum.shareit.request.model.ItemRequest;
 
 @Data
 @Entity
@@ -16,9 +17,14 @@ public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private long ownerId;
     private int beenOnLoan;
     private String name;
     private String description;
     private Boolean available;
+
+    @OneToOne
+    @JoinColumn(name = "request_id")
+    private ItemRequest request;
 }
