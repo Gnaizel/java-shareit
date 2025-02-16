@@ -45,10 +45,8 @@ public class CommentServiceImpl implements CommentService {
         if (user.isEmpty()) {
             throw new UserNotFoundException("User is not found");
         }
-        boolean hasBookedItem = bookingRepository.findAllByBookerId(userId)
-                .stream()
-                .anyMatch(booking -> booking.getItem().getId() == itemId &&
-                        booking.getEnd().isBefore(LocalDateTime.now()));
+        boolean hasBookedItem = !bookingRepository.findAllByBookerIdAndItemId(userId, itemId)
+                .isEmpty();
 
         if (!hasBookedItem) {
             throw new CommentNotAllowedException("User did not book this item.");
