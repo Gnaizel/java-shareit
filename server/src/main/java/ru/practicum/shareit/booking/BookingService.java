@@ -1,7 +1,7 @@
 package ru.practicum.shareit.booking;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingInfoDto;
@@ -25,13 +25,11 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor()
 public class BookingService {
-    @Autowired
-    BookingRepository bookingRepository;
-    @Autowired
-    ItemRepository itemRepository;
-    @Autowired
-    UserRepository userRepository;
+    private final BookingRepository bookingRepository;
+    private final ItemRepository itemRepository;
+    private final UserRepository userRepository;
 
     public BookingInfoDto add(BookingDto bookingDto, long userId) {
         User booker = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
@@ -68,7 +66,7 @@ public class BookingService {
     }
 
     public BookingInfoDto approved(long bookingId, boolean approve, long userId) {
-        Booking booking = bookingRepository.findById(bookingId);
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow();
         if (booking.getItem().getOwnerId() != userId) {
             throw new RuntimeException("In valid permission");
         }
@@ -83,7 +81,7 @@ public class BookingService {
         if (userRepository.findById(userId).isEmpty()) {
             throw new UserNotFoundException("User not found");
         }
-        Booking booking = bookingRepository.findById(id);
+        Booking booking = bookingRepository.findById(id).orElseThrow();
         if (booking.getBooker().getId() != userId && booking.getItem().getOwnerId() != userId) {
             throw new RuntimeException("In valid permission");
         }
