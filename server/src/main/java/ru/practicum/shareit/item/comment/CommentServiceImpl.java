@@ -59,6 +59,7 @@ public class CommentServiceImpl implements CommentService {
         if (text.getText().isEmpty()) {
             throw new CommentIsEmptyError("Comment can not be empty");
         }
+
         Comment comment = commentRepository.save(Comment.builder()
                 .text(text.getText())
                 .item(item.get())
