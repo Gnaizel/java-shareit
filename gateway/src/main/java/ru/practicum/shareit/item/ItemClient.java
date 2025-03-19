@@ -8,7 +8,6 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.client.BaseClient;
-import ru.practicum.shareit.item.comment.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
 
@@ -16,7 +15,7 @@ import java.util.Map;
 
 @Service
 public class ItemClient extends BaseClient {
-    private static final String API_PREFIX = "/item";
+    private static final String API_PREFIX = "/items";
 
     @Autowired
     public ItemClient(@Value("${shareit-server.url}") String serverUrl, RestTemplateBuilder builder) {
@@ -32,20 +31,12 @@ public class ItemClient extends BaseClient {
         return get("", userId);
     }
 
-    public ResponseEntity<Object> create(long itemId, CommentDto text, long userId) {
-        return post("/" + itemId + "/comment", userId, text);
+    public ResponseEntity<Object> save(long userId, ItemDto itemDto) {
+        return post("", userId, itemDto);
     }
 
-    public ResponseEntity<Object> getItemInfo(long itemId) {
-        return get("", itemId);
-    }
-
-    public ResponseEntity<Object> save(long userId, ItemDto item) {
-        return post("", userId, item);
-    }
-
-    public ResponseEntity<Object> update(long userId, long id, ItemUpdateDto update) {
-        return patch("/" + userId, id, update);
+    public ResponseEntity<Object> update(long userId, long id, ItemUpdateDto itemDto) {
+        return put("/" + userId, id, itemDto);
     }
 
     public ResponseEntity<Object> delete(long id) {
@@ -55,4 +46,5 @@ public class ItemClient extends BaseClient {
     public ResponseEntity<Object> search(String text) {
         return get("/search", null, Map.of("text", text));
     }
+
 }

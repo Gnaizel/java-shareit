@@ -6,6 +6,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 import ru.practicum.shareit.booking.dto.BookingStateGet;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +26,14 @@ public class BaseClient {
     }
 
     protected ResponseEntity<Object> get(String path, long userId, BookingStateGet state) {
-        return get(path, userId, state);
+        // Преобразуем BookingStateGet в Map
+        Map<String, Object> parameters = new HashMap<>();
+        if (state != null) {
+            parameters.put("state", state.name());
+        }
+
+        // Вызываем перегрузку с Map
+        return get(path, userId, parameters);
     }
 
     protected ResponseEntity<Object> get(String path, Long userId, @Nullable Map<String, Object> parameters) {

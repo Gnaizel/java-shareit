@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor()
+@RequiredArgsConstructor
 public class BookingService {
     private final BookingRepository bookingRepository;
     private final ItemRepository itemRepository;
@@ -77,11 +77,11 @@ public class BookingService {
         return BookingMapper.toBookingInfoDto(bookingRepository.save(booking));
     }
 
-    public BookingInfoDto getBooking(long id, long userId) {
+    public BookingInfoDto getBooking(long id, Long userId) {
         if (userRepository.findById(userId).isEmpty()) {
             throw new UserNotFoundException("User not found");
         }
-        Booking booking = bookingRepository.findById(id).orElseThrow();
+        Booking booking = bookingRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
         if (booking.getBooker().getId() != userId && booking.getItem().getOwnerId() != userId) {
             throw new RuntimeException("In valid permission");
         }

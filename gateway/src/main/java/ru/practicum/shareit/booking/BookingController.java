@@ -30,9 +30,9 @@ public class BookingController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Object> getBooking(@PathVariable("id") long id,
+	public ResponseEntity<Object> getBooking(@PathVariable("id") Long bookingId,
 											 @RequestHeader("X-Sharer-User-Id") long userId) {
-		return bookingClient.getBooking(id, userId);
+		return bookingClient.getBooking(userId, bookingId);
 	}
 
 	//Это его бронирования ЕГО ОНА САМ БРАНИРОВАЛ

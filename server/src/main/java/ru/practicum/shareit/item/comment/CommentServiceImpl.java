@@ -3,6 +3,7 @@ package ru.practicum.shareit.item.comment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.dto.BookingInfoDto;
 import ru.practicum.shareit.booking.dto.BookingMapper;
@@ -23,6 +24,7 @@ import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -45,11 +47,14 @@ public class CommentServiceImpl implements CommentService {
         if (user.isEmpty()) {
             throw new UserNotFoundException("User is not found");
         }
-        boolean hasBookedItem = !bookingRepository.findAllByBookerIdAndItemId(userId, itemId)
-                .isEmpty();
-
+        List<Booking> bookings = bookingRepository.findAllByBookerIdAndItemId(userId, itemId);
+        boolean hasBookedItem = !bookings.isEmpty();
         if (!hasBookedItem) {
             throw new CommentNotAllowedException("User did not book this item.");
+        }
+        Booking booking = bookings.stream().findFirst().get();
+        if (booking.getEnd().isAfter(LocalDateTime.now())) {
+            throw new CommentNotAllowedException("This action is not allowed until the rebranding is complete");
         }
         if (text.getText().isEmpty()) {
             throw new CommentIsEmptyError("Comment can not be empty");
