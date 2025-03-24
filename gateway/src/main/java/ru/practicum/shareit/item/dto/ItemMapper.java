@@ -7,7 +7,7 @@ import ru.practicum.shareit.request.model.ItemRequest;
 @AllArgsConstructor
 public class ItemMapper {
 
-    public static ItemDto toBookingInfoDto(Item item) {
+    public static ItemDto toItemDto(Item item) {
         return ItemDto.builder()
                 .ownerId(item.getOwnerId())
                 .id(item.getId())

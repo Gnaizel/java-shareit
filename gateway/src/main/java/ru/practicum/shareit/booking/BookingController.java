@@ -1,7 +1,7 @@
 package ru.practicum.shareit.booking;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -12,13 +12,13 @@ import ru.practicum.shareit.booking.dto.BookingStateGet;
 @RestController
 @RequestMapping(path = "/bookings")
 @Slf4j
+@RequiredArgsConstructor
 public class BookingController {
-	@Autowired
-	BookingClient bookingClient;
+	private final BookingClient bookingClient;
 
 	@PostMapping
 	public ResponseEntity<Object> bookingAdd(@Validated @RequestBody BookItemRequestDto booking, @RequestHeader("X-Sharer-User-Id") long userId) {
-		log.info(String.valueOf(booking));
+		log.info("User ID: " + userId, "\n Item: " + booking.getItemId());
 		return bookingClient.bookItem(userId, booking);
 	}
 
@@ -48,6 +48,6 @@ public class BookingController {
 	public ResponseEntity<Object> getAllBookingItemOwner(@RequestHeader("X-Sharer-User-Id") long userId,
 														 @RequestParam(value = "state", defaultValue = "ALL")
 														 BookingStateGet state) {
-		return bookingClient.getAllBookingByOwnre(userId, state);
+		return bookingClient.getAllBookingByOwner(userId, state);
 	}
 }

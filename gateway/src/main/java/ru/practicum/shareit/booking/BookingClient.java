@@ -46,7 +46,7 @@ public class BookingClient extends BaseClient {
         return get("", userId, state);
     }
 
-    public ResponseEntity<Object> getAllBookingByOwnre(long userId,
+    public ResponseEntity<Object> getAllBookingByOwner(long userId,
                                                        BookingStateGet state) {
         return get("/owner", userId, state);
     }
